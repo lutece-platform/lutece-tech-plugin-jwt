@@ -48,12 +48,7 @@
 			<filter-name>TokenFilter</filter-name>
 			<url-pattern>/rest/*</url-pattern>
 			<filter-class>fr.paris.lutece.plugins.jwt.web.rs.TokenFilter</filter-class>
-			<init-param>
-				<param-name>param1</param-name>
-				<param-value>value of param1</param-value>
-			</init-param>
 		</filter>
 	</filters>
-
 
 </plug-in>

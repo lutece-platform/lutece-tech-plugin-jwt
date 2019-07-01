@@ -58,9 +58,23 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTTokenProvider {
 	
-	public String createJWT( HttpServletRequest request, String subject, int tokenValidityMin, Map<String, AdminRole> roles, AdminUser user) {
+	/**
+	 * Create the JWT Token 
+	 * 
+	 * @param request
+	 * 			the HTTPSerletRequest
+	 * @param subject
+	 * 			subjet param of the payload
+	 * @param tokenValidityMin
+	 * 			Minutes before the jwt token expired
+	 * @param roles
+	 * 				user's roles
+	 * @param user
+	 * 			AdminUser object
+	 * @return
+	 */
+	public String createJWT( HttpServletRequest request, int intTokenValidityMin, Map<String, AdminRole> mapRoles, AdminUser user) {
 		  
-	    // The JWT header identitfy algorithm use for the signature
 	    Map<String, Object> header = new HashMap<String, Object>( );
 	    header.put("alg", "HS256");
 	    header.put( Header.TYPE, Header.JWT_TYPE );
@@ -68,32 +82,33 @@ public class JWTTokenProvider {
 	    	
 	    SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 	    
-
-	    //We will sign our JWT with our ApiKey secret
 	    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary( JWTConstants.SECRET_KEY );
 	    Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-	    //Let's set the JWT Claims
+	    
 	    JwtBuilder builder = Jwts.builder( )
 	            .setHeader( header )
 	            .setIssuer( AppPathService.getWebAppPath( ) )
 	            .setIssuedAt( new Timestamp( date.getTime() ) )
 	            .setAudience( AppPathService.getBaseUrl( request ) )
 	            .setSubject( String.valueOf( user.getUserId( ) ) )
-	            .claim( "role", roles ) 	
+	            .claim( JWTConstants.PAYLOAD_ROLE, mapRoles ) 	
 	            .signWith( signatureAlgorithm, signingKey );
 	  
-	    //if it has been specified, let's add the expiration
-	    if (tokenValidityMin > 0) {
-	        date = DateUtils.addMinutes(date, tokenValidityMin);
+	    if (intTokenValidityMin > 0) {
+	        date = DateUtils.addMinutes(date, intTokenValidityMin);
 	        builder.setExpiration(date);
 	    }  
 	  
-	    //Builds the JWT and serializes it to a compact, URL-safe string
 	    return builder.compact();
 	}
 	
+	/**
+	 * Decode and return the params of the jwt token payload
+	 * 
+	 * @param jwt
+	 * @return
+	 */
 	public static Claims decodeJWT(String jwt) {
-	    //This line will throw an exception if it is not a signed JWS (as expected)
 	    return  Jwts.parser()
 	            .setSigningKey(DatatypeConverter.parseBase64Binary( JWTConstants.SECRET_KEY ))
 	            .parseClaimsJws(jwt).getBody();

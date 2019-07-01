@@ -14,10 +14,19 @@ import javax.persistence.Table;
 public class JWTUser implements Serializable
 {
 	
+	/**
+	 * The jwt user id
+	 */
 	private int _id;
 	
+	/**
+	 * the jwt username
+	 */
 	private String _username;
 	
+	/**
+	 * password of user
+	 */
 	private String _password;
 	
     @Id

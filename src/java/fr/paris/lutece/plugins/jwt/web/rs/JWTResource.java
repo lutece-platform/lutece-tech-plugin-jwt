@@ -56,6 +56,7 @@ import fr.paris.lutece.portal.business.user.authentication.LuteceDefaultAdminAut
 import fr.paris.lutece.portal.business.user.authentication.LuteceDefaultAdminUserDAO;
 import fr.paris.lutece.portal.service.admin.AdminAuthenticationService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import net.sf.json.JSONObject;
 
@@ -75,6 +76,15 @@ public class JWTResource  {
 	@Named("admin.authService")
 	private AdminAuthenticationService _adminAuth;
 
+	/**
+	 * Signin method to obtain a JWT Token for the webservices
+	 * @param request
+	 * 			The HttpServletRequest
+	 * @param strJsonData
+	 * 			params of the request
+	 * @return
+	 * 			the jwt token
+	 */
 	@POST
 	@Path( "/login" )
 	@Consumes( MediaType.APPLICATION_JSON )
@@ -87,17 +97,21 @@ public class JWTResource  {
 		try {
 			LuteceDefaultAdminAuthentication adminAuth = getLuteceDefaultAdminAuthentication();
 			AdminUser user = adminAuth.login(jsonRequest.get( USERNAME_PARAM ).toString( ), jsonRequest.get( PASSWORD_PARAM ).toString( ), request );
-			Map<String, AdminRole> userRoles = AdminUserHome.getRolesListForUser( user.getUserId() );
-			String jwt = _jwtTokenProvider.createJWT( request, jsonRequest.get(USERNAME_PARAM).toString(), AppPropertiesService.getPropertyInt( TOKEN_VALIDITY, 0 ), userRoles, user );
+			Map<String, AdminRole> mapUserRoles = AdminUserHome.getRolesListForUser( user.getUserId() );
+			String jwt = _jwtTokenProvider.createJWT( request, AppPropertiesService.getPropertyInt( TOKEN_VALIDITY, 0 ), mapUserRoles, user );
 			JSONObject jwtToken = new JSONObject();
 			jwtToken.accumulate( JWTConstants.JWT_KEY, jwt );
 			return jwtToken.toString();				
 		} catch (LoginException | JSONException e) {
-			e.printStackTrace();
+			AppLogService.error( JWTConstants.LOGIN_ERROR );
 			return null;
 		}
 	}
 
+	/**
+	 * Get the bean of LuteceDefaultAdminAuthentication
+	 * @return
+	 */
 	private LuteceDefaultAdminAuthentication getLuteceDefaultAdminAuthentication( )
 	{
 		LuteceDefaultAdminAuthentication adminAuth = new LuteceDefaultAdminAuthentication( );

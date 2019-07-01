@@ -35,24 +35,60 @@ package fr.paris.lutece.plugins.jwt.util.constants;
 
 public class JWTConstants {
 	
+	/**
+	 * token key
+	 */
 	public static final String JWT_KEY							= "token";
 	
+	/**
+	 * token secret key
+	 */
 	public static final String SECRET_KEY 						= "secret_key";
 	
+	public static final String PAYLOAD_ROLE						= "role";
+	/**
+	 * The authorisation header
+	 */
 	public static final String AUTHORISATION_HEADER 			= "Authorization";
 	
+	/**
+	 * The url login to obtain a JWT Token
+	 */
 	public static final String URL_LOGIN						= "/rest/jwt/login";
 	
+	/**
+	 * The error message when user does not have JWT Token
+	 */
 	public static final String NO_JWT_TOKEN_MESSAGE				= "You do not have JWT access token";
 	
+	/**
+	 * The error message when jwt's user token is expired
+	 */
 	public static final String EXPIRED_TOKEN_MESSAGE			= "The JWT access token have expired";
 	
+	/**
+	 * The error message when the signature of request is incorrect
+	 */
 	public static final String WRONG_SIGNATURE					= "Wrong signature";
 	
+	/**
+	 * 200 OK Message
+	 */
 	public static final String ACCESS_GRANTED					= "ACCES GRANTED";
 	
+	/**
+	 * The error message when user does not have the role(s) to access to the webservice
+	 */
 	public static final String NO_ACCESS						= "You don't have access to webservices";
 	
+	/**
+	 * The error message when user login/pwd is wrong
+	 */
+	public static final String LOGIN_ERROR						= "You are not authorized to signin";
+	
+	/**
+	 * Name of webservice access role
+	 */
 	public static final String WS_ROLE							= "WS_ACCESS";
 	
 	

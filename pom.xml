@@ -64,4 +64,10 @@
 		</dependency>
 	</dependencies>
 
+    <scm>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-jwt.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-jwt.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-tech-plugin-jwt.git</url>
+    </scm>
+
 </project>
